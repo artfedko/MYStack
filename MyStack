@@ -1,0 +1,113 @@
+#include <iostream>
+
+using namespace std;
+
+template<typename T>
+class Node{
+	public:
+		Node(T value, Node* pr){
+			__value = value;
+			__pr = pr;
+		}
+		T GetValue(){
+			return __value;
+		}
+		
+		void SetValue(T value){
+			__value = value;
+		}
+		
+		Node* GetPrevious(){
+			return __pr;
+		}
+		
+		void SetPrev(Node* node){
+			__pr = node;
+		}
+		
+		
+	private:
+		T __value;
+		Node* __pr;	
+};
+
+
+template<typename T>
+class MyStack{
+	public:
+		MyStack(){
+			last = nullptr;
+			size = 0;
+		}
+		
+		MyStack(MyStack& right) = delete;
+		MyStack(MyStack&& right) = delete;
+		MyStack operator = (MyStack& right) = delete;
+		~MyStack(){
+			clear();
+		}
+		unsigned Size(){
+			return size;
+		}
+		
+		void Push(T value){
+			Node <T>* newNode = new Node<T>(value,last);
+			last = newNode;
+			size += 1;	
+		}
+		
+		void Pop(){
+			Node<T>* PLM = last -> GetPrevious();
+			delete last;
+			last = PLM;
+			size -= 1;
+		}
+		void clear(){
+			int __size = size;
+			for(int i = 0; i < __size; i++){
+				Pop();
+			}
+		}
+		
+		T Top(){
+			return last -> GetValue();
+		}
+		
+		T operator[](unsigned index) const{
+			int _i = index;
+			if(_i > size -1){
+				_i = size-1;				
+			}
+			
+			_i = size - _i - 1;
+			
+			Node<T>* Cr_Node = last;
+			for(int i = 0; i < _i; i++){
+				Cr_Node = Cr_Node -> GetPrevious();
+			}
+			return Cr_Node -> GetValue();
+		}
+	
+	private:
+		Node<T>* last;
+		unsigned size;
+		
+};
+
+int main(){
+	MyStack<int> MS;
+	int n;
+	cin >> n;
+	for(int i = 0; i < n; i++ ){
+		int a;
+		cin >> a;
+		MS.Push(a);
+	}
+	cout << "TOP1: " << MS.Top() << endl;
+	MS.Pop();
+	cout << "TOP2: " << MS.Top() << endl;
+	for(int i = 0; i < MS.Size(); i++ ){
+		cout << MS[i] << " ";
+	}
+	return 0;
+}
